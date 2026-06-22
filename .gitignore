@@ -1,0 +1,31 @@
+.venv/
+venv/
+__pycache__/
+inspection-dashboard/node_modules/
+inspection-dashboard/build/
+inspection-dashboard/.git/
+inspection_dashboard/
+
+# Data & Datasets
+datasets/
+mvtec_data/
+
+# Model Weights
+*.pt
+models/
+
+# Database & Logs
+*.db
+*.sqlite
+*.sqlite3
+logs/
+*.log
+
+# Uploads & Outputs
+uploads/
+inspection_results/
+test_images_online/
+*.pdf
+
+# Other
+runs/
