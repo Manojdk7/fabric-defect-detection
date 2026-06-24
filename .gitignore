@@ -10,9 +10,9 @@ inspection_dashboard/
 datasets/
 mvtec_data/
 
-# Model Weights
-*.pt
-models/
+# Model Weights (uncomment to exclude from git)
+# *.pt
+# models/
 
 # Database & Logs
 *.db

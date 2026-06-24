@@ -1,0 +1,57 @@
+# Version control
+.git/
+.gitignore
+.gitattributes
+
+# Virtual environments
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Frontend (deployed separately on Render)
+inspection-dashboard/
+
+# Data & datasets (not needed in Docker image)
+datasets/
+mvtec_data/
+runs/
+
+# Runtime data (created at runtime on persistent volume)
+uploads/
+inspection_results/
+logs/
+*.db
+*.sqlite
+*.sqlite3
+*.log
+
+# Documents
+*.pdf
+*.md
+*.txt
+
+# Test files
+test_*.py
+verify_*.py
+
+# Pipeline scripts (not needed for API server)
+00_run_pipeline.py
+01_setup_data.py
+02_augment_data.py
+03_prepare_yolo_labels.py
+04_retrain_model.py
+04_retrain_model_fixed.py
+05_validate_model.py
+simple_pipeline.py
+merge_fabric_datasets.py
+quick_inference.py
+create_report_pdf.py
+train_fabric_detector.py
+start_react.bat
+
+# Large unused model (keep yolov8n.pt, skip the 52MB medium model)
+yolov8m.pt

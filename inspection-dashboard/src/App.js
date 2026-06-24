@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./App.css";
 
 // Use 127.0.0.1 — another service (Node) may be bound to localhost:5000 on IPv6
-const API_BASE_URL = "http://127.0.0.1:5000/api";
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://127.0.0.1:5000/api";
 const DEFAULT_CONFIDENCE = 0.35;
 
 const emptySummary = {
@@ -399,17 +399,22 @@ function App() {
   );
 
   const startCamera = async () => {
+    console.log("[Camera] startCamera called, cameraStatus:", cameraStatus);
+
     if (cameraStatus === "live") {
+      console.log("[Camera] Already live, returning.");
       return;
     }
 
     if (!window.isSecureContext) {
+      console.error("[Camera] Not a secure context! URL:", window.location.href);
       setCameraStatus("blocked");
       setError("Camera needs a secure browser context. Open the dashboard at http://localhost:3000.");
       return;
     }
 
     if (!navigator.mediaDevices?.getUserMedia) {
+      console.error("[Camera] getUserMedia not available.");
       setCameraStatus("blocked");
       setError("Camera access is not available in this browser.");
       return;
@@ -417,6 +422,7 @@ function App() {
 
     setError("");
     setCameraStatus("starting");
+    console.log("[Camera] Requesting camera permission...");
 
     try {
       let stream;
@@ -435,8 +441,11 @@ function App() {
 
       try {
         stream = await navigator.mediaDevices.getUserMedia(preferredConstraints);
+        console.log("[Camera] Got stream with preferred constraints.");
       } catch (preferredError) {
+        console.warn("[Camera] Preferred constraints failed:", preferredError.message, "— trying fallback.");
         stream = await navigator.mediaDevices.getUserMedia(fallbackConstraints);
+        console.log("[Camera] Got stream with fallback constraints.");
       }
 
       streamRef.current = stream;
@@ -444,13 +453,18 @@ function App() {
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         await videoRef.current.play();
+        console.log("[Camera] Video playing, dimensions:", videoRef.current.videoWidth, "x", videoRef.current.videoHeight);
+      } else {
+        console.error("[Camera] videoRef.current is null!");
       }
 
       setCameraStatus("live");
       setAutoScan(true);
       setCaptureCount(0);
       setCountdownTimer(scanInterval);
+      console.log("[Camera] Camera is now live.");
     } catch (err) {
+      console.error("[Camera] Error:", err.name, err.message);
       setCameraStatus("blocked");
       const help =
         err.name === "NotAllowedError"

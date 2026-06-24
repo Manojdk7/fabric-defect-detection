@@ -1,4 +1,5 @@
 import logging
+import os
 import secrets
 import time
 from functools import wraps
@@ -13,7 +14,7 @@ from database import get_inspection, get_stats, init_db, list_inspections, save_
 from defect_detector import DefectDetector
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=os.getenv("CORS_ORIGINS", "*").split(","))
 
 Config.UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
 Config.RESULTS_FOLDER.mkdir(parents=True, exist_ok=True)
@@ -403,7 +404,8 @@ def internal_error(error):
 
 
 if __name__ == "__main__":
+    port = int(os.getenv("PORT", 5000))
     print("Quality Inspection System API")
-    print("Starting server at http://localhost:5000")
+    print(f"Starting server at http://localhost:{port}")
     print("Default login: admin / admin123")
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=os.getenv("FLASK_DEBUG", "false").lower() == "true", host="0.0.0.0", port=port)
